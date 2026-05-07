@@ -392,11 +392,19 @@ header {
       </div>
     </div>
 
-    <div>
+<div>
       <div class="sec-title">Firma y fecha</div>
       <div class="field">
-        <label>Nombre de quien firma</label>
+        <label>Nombre de quien certifica</label>
         <input id="f-sig1" type="text" value="Dr. Carlos Pérez" oninput="render()" />
+      </div>
+      <div class="field">
+        <label>Rol / Cargo</label>
+        <input id="f-sig1-role" type="text" value="Director Académico" oninput="render()" />
+      </div>
+      <div class="field">
+        <label>Lugar</label>
+        <input id="f-lugar" type="text" value="Córdoba, Argentina" oninput="render()" />
       </div>
       <div class="field">
         <label>Fecha</label>
@@ -451,8 +459,10 @@ function getData() {
     course: document.getElementById('f-course').value || '',
     hours:  document.getElementById('f-hours').value  || '',
     body:   document.getElementById('f-body').value   || 'participó en',
-    sig1:   document.getElementById('f-sig1').value   || '',
-    date:   ds,
+    sig1:     document.getElementById('f-sig1').value      || '',
+    sig1role: document.getElementById('f-sig1-role').value || '',
+    lugar:    document.getElementById('f-lugar').value     || 'Córdoba',
+    date:     ds,
   };
 }
 
@@ -494,8 +504,8 @@ function buildInstitucional(d) {
       <div class="c-course" style="color:${T}">${d.course}</div>
       ${d.hours ? `<div class="c-hours">${d.hours}</div>` : '<div style="height:20px"></div>'}
       <div class="c-sig-area">
-        ${d.sig1 ? sigBlock(d.sig1, BURG, '#111') : ''}
-        ${d.date ? dateBlock(d.date, '#333') : ''}
+        ${d.sig1 ? sigBlock(d.sig1, d.sig1role, BURG, '#111') : ''}
+        ${d.date ? dateBlock(d.lugar, d.date, d.sig1role, '#333') : ''}
       </div>
     </div>
 
@@ -525,8 +535,8 @@ function buildFormal(d) {
       <div class="c-course" style="color:${T};text-align:left;font-size:18px">${d.course}</div>
       ${d.hours ? `<div class="c-hours" style="text-align:left">${d.hours}</div>` : '<div style="height:20px"></div>'}
       <div class="c-sig-area" style="justify-content:flex-start;gap:60px">
-        ${d.sig1 ? sigBlock(d.sig1, BURG, '#111') : ''}
-        ${d.date ? dateBlock(d.date, '#333') : ''}
+        ${d.sig1 ? sigBlock(d.sig1, d.sig1role, BURG, '#111') : ''}
+        ${d.date ? dateBlock(d.lugar, d.date, '#333') : ''}
       </div>
     </div>
   `;
@@ -552,8 +562,8 @@ function buildOscuro(d) {
       <div class="c-course" style="color:${WHITE};font-size:18px">${d.course}</div>
       ${d.hours ? `<div class="c-hours" style="color:rgba(255,255,255,.35)">${d.hours}</div>` : '<div style="height:20px"></div>'}
       <div class="c-sig-area">
-        ${d.sig1 ? sigBlock(d.sig1, BURG2, WHITE) : ''}
-        ${d.date ? dateBlock(d.date, WHITE) : ''}
+        ${d.sig1 ? sigBlock(d.sig1, d.sig1role, BURG2, WHITE) : ''}
+        ${d.date ? dateBlock(d.lugar, d.date, WHITE) : ''}
       </div>
     </div>
   `;
@@ -576,8 +586,8 @@ function buildMinimal(d) {
       <div class="c-course" style="color:${BURG};font-size:18px;font-weight:700">${d.course}</div>
       ${d.hours ? `<div class="c-hours">${d.hours}</div>` : '<div style="height:20px"></div>'}
       <div class="c-sig-area">
-        ${d.sig1 ? sigBlock(d.sig1, BURG, '#111') : ''}
-        ${d.date ? dateBlock(d.date, '#333') : ''}
+        ${d.sig1 ? sigBlock(d.sig1, d.sig1role, BURG, '#111') : ''}
+        ${d.date ? dateBlock(d.lugar, d.date, '#333') : ''}
       </div>
     </div>
 
@@ -588,18 +598,19 @@ function buildMinimal(d) {
   `;
 }
 
-function sigBlock(name, lineColor, textColor) {
+function sigBlock(name, role, lineColor, textColor) {
   return `
     <div class="c-sig" style="color:${textColor}">
       <div class="c-sig-line" style="background:${rgba(lineColor,.5)}"></div>
       <div class="c-sig-name">${name}</div>
+      ${role ? `<div style="font-size:10.5px;font-weight:400;font-style:italic;opacity:.65;margin-top:1px">${role}</div>` : ''}
     </div>`;
 }
 
-function dateBlock(date, textColor) {
+function dateBlock(lugar, date, textColor) {
   return `
-    <div class="c-date-block" style="color:${textColor}">
-      <div class="c-date-label">Córdoba</div>
+    <div class="c-date-block" style="color:${textColor};text-align:right">
+      <div class="c-date-label">${lugar}</div>
       <div class="c-date-value">${date}</div>
     </div>`;
 }
@@ -631,8 +642,10 @@ function resetForm() {
   document.getElementById('f-course').value = 'La era del riesgo geopolítico: Impacto en los mercados y negocios internacionales';
   document.getElementById('f-hours').value  = '3 horas académicas';
   document.getElementById('f-body').value   = 'participó en calidad de asistente en el';
-  document.getElementById('f-sig1').value   = 'Dr. Carlos Pérez';
-  document.getElementById('f-date').value   = new Date().toISOString().split('T')[0];
+  document.getElementById('f-sig1').value      = 'Dr. Carlos Pérez';
+  document.getElementById('f-sig1-role').value = 'Director Académico';
+  document.getElementById('f-lugar').value     = 'Córdoba, Argentina';
+  document.getElementById('f-date').value      = new Date().toISOString().split('T')[0];
   setTpl(document.querySelector('[data-tpl="institucional"]'));
   render();
 }
